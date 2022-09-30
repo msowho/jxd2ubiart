@@ -5,8 +5,8 @@ class SongData:
 
     def __init__(self, raw_data: dict) -> None:'
         """Constructor"""
-        self.id = raw_data["id"]
-        self.material_number = raw_data["materialNo"]
+        self.id = int(raw_data["id"])
+        self.material_number = int(raw_data["materialNo"])
         self.title = raw_data["materialName"]
         self.artist = raw_data["singer"]
         self.userfriendly_id = raw_data["info"]

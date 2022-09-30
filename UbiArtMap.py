@@ -61,12 +61,93 @@ class UbiArtMap:
     def generate_musictrack(self) -> dict:
         """Generate musictrack"""
 
-        return {}
+        return {
+            "__class": "Actor_Template",
+            "WIP": 0,
+            "LOWUPDATE": 0,
+            "UPDATE_LAYER": 0,
+            "PROCEDURAL": 0,
+            "STARTPAUSED": 0,
+            "FORCEISENVIRONMENT": 0,
+            "COMPONENTS": [{
+                    "__class": "MusicTrackComponent_Template",
+                    "trackData": {
+                        "__class": "MusicTrackData",
+                        "structure": {
+                            "__class": "MusicTrackStructure",
+                            "markers": self.beats,
+                            "signatures": [{
+                                    "__class": "MusicSignature",
+                                    "marker": 0,
+                                    "beats": 4
+                                }
+                            ],
+                            "startBeat": 0,
+                            "endBeat": len(self.beats),
+                            "fadeStartBeat": 0,
+                            "useFadeStartBeat": false,
+                            "fadeEndBeat": 0,
+                            "useFadeEndBeat": false,
+                            "videoStartTime": 0,
+                            "previewEntry": len(self.beats) / 6,
+                            "previewLoopStart": len(self.beats) / 6,
+                            "previewLoopEnd": len(self.beats) / 4,
+                            "volume": 0,
+                            "fadeInDuration": 0,
+                            "fadeInType": 0,
+                            "fadeOutDuration": 0,
+                            "fadeOutType": 0
+                        },
+                        "path": f"world/maps/{self.song_data.userfriendly_id.lower()}/audio/{self.song_data.userfriendly_id.lower()}.wav",
+                        "url": f"jmcs://jd-contents/{self.song_data.userfriendly_id}/{self.song_data.userfriendly_id}.ogg"
+                    }
+                }
+            ]
+        }
 
     def generate_song_description(self) -> dict:
         """Generate song description asset"""
 
-        return {}
-
+        return {
+            "__class": "Actor_Template",
+            "WIP": 0,
+            "LOWUPDATE": 0,
+            "UPDATE_LAYER": 0,
+            "PROCEDURAL": 0,
+            "STARTPAUSED": 0,
+            "FORCEISENVIRONMENT": 0,
+            "COMPONENTS": [{
+                    "__class": "JD_SongDescTemplate",
+                    "MapName": self.song_data.userfriendly_id,
+                    "JDVersion": 2017,
+                    "OriginalJDVersion": 2017,
+                    "Artist": self.song_data.artist,
+                    "DancerName": "Unknown Dancer",
+                    "Title": "CAN'T STOP THE FEELING!",
+                    "Credits": "<< TO BE FILLED >>",
+                    "PhoneImages": {
+                        "cover": f"world/maps/{self.song_data.userfriendly_id.lower()}/menuart/textures/{self.song_data.userfriendly_id.lower()}_cover_phone.jpg",
+                        "coach2": f"world/maps/{self.song_data.userfriendly_id.lower()}/menuart/textures/{self.song_data.userfriendly_id.lower()}_coach_2_phone.png",
+                        "coach1": f"world/maps/{self.song_data.userfriendly_id.lower()}/menuart/textures/{self.song_data.userfriendly_id.lower()}_coach_1_phone.png"
+                    },
+                    "NumCoach": self.dancer_count,
+                    "MainCoach": -1,
+                    "Difficulty": 1,
+                    "SweatDifficulty": 1,
+                    "backgroundType": 0,
+                    "LyricsType": 0,
+                    "Tags": ["main"],
+                    "Status": 3,
+                    "LocaleID": 4294967295,
+                    "MojoValue": 0,
+                    "CountInProgression": 1,
+                   "DefaultColors": {
+                        "lyrics": [1, 1, 0, 0],
+                        "theme": [1, 1, 1, 1],
+                    },
+                    "VideoPreviewPath": ""
+                }
+            ]
+        }
 
 __all__ = ["UbiArtMap"]

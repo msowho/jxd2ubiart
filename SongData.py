@@ -3,7 +3,7 @@ import Constants
 class SongData:
     """Song data"""
 
-    def __init__(self, raw_data: dict) -> None:'
+    def __init__(self, raw_data: dict) -> None:
         """Constructor"""
         self.id = int(raw_data["id"])
         self.material_number = int(raw_data["materialNo"])
@@ -14,7 +14,7 @@ class SongData:
             "super": raw_data["fullMvDTO"]["fullMvSuper"],
             "high": raw_data["fullMvDTO"]["fullMvHigh"],
             "middle": raw_data["fullMvDTO"]["fullMvMiddle"],
-            "clear": raw_data["fullMvDTO"]["fullMvClears"]
+            "clear": raw_data["fullMvDTO"]["fullMvClear"]
         }
         self.play_model = raw_data["playModel"]
         self.dancer_count = 1 if raw_data["playNumberPeople"] == "single_people" else 2
@@ -23,9 +23,9 @@ class SongData:
     def generate_beats(self) -> list:
         """Beat generator"""
         result = [0]
-        beat_size = (Constants.DEFAULT_BPM / 60000) / 1000 # seconds is based
+        beat_size = (60000 / Constants.DEFAULT_BPM) / 1000
 
-        while result[-1] > self.duration:
+        while result[-1] < self.duration:
             current_beat = result[-1] + beat_size
             result.append(current_beat)
 

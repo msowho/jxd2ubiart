@@ -19,7 +19,7 @@ class JXDanceAPI:
             "ask_dance_info_by_material_no": "/dance/material/detail?materialNo={0}"
         }
 
-    def get_dance_info(self, material_number: int):
+    def get_dance_info(self, material_number: int) -> dict:
         """Returns a map information."""
         request_url = self.api_url + self.endpoints["ask_dance_info_by_material_no"].format(material_number)
         
@@ -31,7 +31,7 @@ class JXDanceAPI:
 
             return response_body["data"]
 
-    def get_ar_data(self, material_id: int):
+    def get_ar_data(self, material_id: int) -> dict:
         """Returns AR data."""
         request_url = self.api_url + self.endpoints["ask_ar_dance_detail"].format(material_id)
         

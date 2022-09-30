@@ -13,10 +13,11 @@ class ARData:
     def __init__(self, raw_data: dict) -> None:
         """Constructor"""
         self.tracking_data = []
-        self._init_tracking_data()
+        self._init_tracking_data(raw_data["bodyData"])
+        self._init_tracking_data(raw_data["bodyData2"])
         
         self.pictograms = []
-        self._init_pictograms()
+        self._init_pictograms(raw_data["eventData"])
 
     def _init_tracking_data(self, body_data: str) -> None:
         for bone_element_string in body_data.splitlines():
@@ -39,7 +40,7 @@ class ARData:
         for dance_logic in event_data["m_DanceLogicList"]:
             pictogram = {}
 
-            pictogram["time"] = float(dance_logic["m_Time"])
+            pictogram["time"] = float(dance_logic["m_CurrentTime"])
             pictogram["texture_path"] = "Motion/{0}/{1}" \
                                         .format(event_data["m_DanceName"], dance_logic["m_ImageName"])
 

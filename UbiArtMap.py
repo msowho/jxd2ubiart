@@ -1,9 +1,6 @@
 from random import randint
-from .SongData import SongData
-
-
-def interpolate(x, x0, y0, x1, y1):
-    return y1 + (x - x0) * ((y1 - y0) / (x1 - x0))
+from SongData import SongData
+from scipy.interpolate import interp1d
 
 
 class UbiArtMap:
@@ -12,17 +9,22 @@ class UbiArtMap:
     def __init__(self, beats: list, song_data: SongData):
         """Constructor"""
         self.beats = self._convert_beats(beats)
+        self.beats24 = list(map(lambda x: x * 24, range(len(beats))))
+        
+        print(beats, self.beats24)
+        
+        self.interpolator = interp1d(beats, self.beats24)
         
         self.song_data = song_data
         self.clips = []
 
     def _convert_beats(self, beats: list):
         """Convert beats to UbiArt format"""
-        return list(map(lambda x: x * 48000, beats)) # input data have to be seconds
-                                                     # milliseconds * 48 = (seconds * 1000) * 48 = seconds * 48000
+        return list(map(lambda x: int(x * 48000), beats)) # input data have to be seconds
+                                                          # milliseconds * 48 = (seconds * 1000) * 48 = seconds * 48000
 
     def _interpolate_time(self, time: float) -> int:
-        return int(interpolate(time, self.beats[0] / 48000, self.beats[-1] / 48000, self.beats[0], self.beats[-1]))
+        return int(self.interpolator(time))
 
     def add_pictogram_clip(self, pictogram_data: dict):
         """Add pictogram clip"""
@@ -33,7 +35,7 @@ class UbiArtMap:
             "IsActive": 1,
             "StartTime": self._interpolate_time(pictogram_data["time"]),
             "Duration": 24,
-            "PictoPath": f"world/maps/{self.song_data.userfriendly_id.lower()}/timeline/pictos/{pictogram_data['texture_path'].split('/')[-1]}.png",
+            "PictoPath": f"world/maps/{self.song_data.userfriendly_id.lower()}/timeline/pictos/{pictogram_data['texture_path'].split('/')[-1].lower()}.png",
             "AtlIndex": 4294967295,
             "CoachIndex": 4294967295
         }
@@ -43,7 +45,7 @@ class UbiArtMap:
 
     def _resort_clips(self) -> None:
         """Resort clips by ID and TrackID"""
-        self.clips.sort(lambda x: x["Id"] + x["TrackId"])
+        self.clips.sort(key=lambda x: x["Id"] + x["TrackId"])
 
     def generate_dance_tape(self) -> dict:
         """Generate dance tape"""
@@ -85,13 +87,13 @@ class UbiArtMap:
                             "startBeat": 0,
                             "endBeat": len(self.beats),
                             "fadeStartBeat": 0,
-                            "useFadeStartBeat": false,
+                            "useFadeStartBeat": False,
                             "fadeEndBeat": 0,
-                            "useFadeEndBeat": false,
+                            "useFadeEndBeat": False,
                             "videoStartTime": 0,
-                            "previewEntry": len(self.beats) / 6,
-                            "previewLoopStart": len(self.beats) / 6,
-                            "previewLoopEnd": len(self.beats) / 4,
+                            "previewEntry": int(len(self.beats) / 6),
+                            "previewLoopStart": int(len(self.beats) / 6),
+                            "previewLoopEnd": int(len(self.beats) / 4),
                             "volume": 0,
                             "fadeInDuration": 0,
                             "fadeInType": 0,
@@ -123,14 +125,14 @@ class UbiArtMap:
                     "OriginalJDVersion": 2017,
                     "Artist": self.song_data.artist,
                     "DancerName": "Unknown Dancer",
-                    "Title": "CAN'T STOP THE FEELING!",
+                    "Title": self.song_data.title,
                     "Credits": "<< TO BE FILLED >>",
                     "PhoneImages": {
                         "cover": f"world/maps/{self.song_data.userfriendly_id.lower()}/menuart/textures/{self.song_data.userfriendly_id.lower()}_cover_phone.jpg",
                         "coach2": f"world/maps/{self.song_data.userfriendly_id.lower()}/menuart/textures/{self.song_data.userfriendly_id.lower()}_coach_2_phone.png",
                         "coach1": f"world/maps/{self.song_data.userfriendly_id.lower()}/menuart/textures/{self.song_data.userfriendly_id.lower()}_coach_1_phone.png"
                     },
-                    "NumCoach": self.dancer_count,
+                    "NumCoach": self.song_data.dancer_count,
                     "MainCoach": -1,
                     "Difficulty": 1,
                     "SweatDifficulty": 1,
